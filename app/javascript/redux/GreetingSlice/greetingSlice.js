@@ -1,37 +1,35 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  greeting: null,
-  isLoading: false,
+  greetingstore: [],
+  status: 'idle',
+  error: null
 };
 
 const BASE_URL = "http://localhost:3000/greetings";
 
 export const fetchGreeting = createAsyncThunk(
   "greetings/fetchgreetings",
-  async (_, thunkAPI) => {
-    try {
-      const response = await axios(BASE_URL);
-      return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue("Greeting could not be fetched");
-    }
+  async () => {
+     const response = await axios.get(BASE_URL);
+     return response.data;
   }
 );
 const greetingSlice = createSlice({
-  name: "greeting",
+  name: "greetings",
   initialState,
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchGreeting.pending, (state) => {
-      state.isLoading = true;
+      state.status = 'Loading';
     });
-    builder.addCase(fetchGreeting.fulfilled, (state, { payload }) => {
-      state.isLoading = false;
-      state.greeting = payload.message;
+    builder.addCase(fetchGreeting.fulfilled, (state, action) => {
+      state.status = 'succeded';
+      state.greetingstore = state.greetingstore.concat(action.payload);
     });
-    builder.addCase(fetchGreeting.rejected, (state, { payload }) => {
-      state.isLoading = false;
-      state.greeting = payload.message;
+    builder.addCase(fetchGreeting.rejected, (state, action) => {
+      state.status = 'failed';
+      state.error = action.error.message;
     });
   },
 });

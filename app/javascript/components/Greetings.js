@@ -4,19 +4,11 @@ import { fetchGreeting } from "../redux/GreetingSlice/greetingSlice";
 
 const Greetings = () => {
   const dispatch = useDispatch();
-  const { isLoading, greeting } = useSelector((state) => state.greetings.greeting);
+  const greeting = useSelector((state) => state.greeting.greetingstore) || [];
   useEffect(() => {
     dispatch(fetchGreeting());
-  }, []);
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-
-  return (
-    <div>
-      <h1>{(greeting && greeting) || "Hello world"}</h1>
-      <button onClick={() => dispatch(fetchGreeting())}>change greeting</button>
-    </div>
-  );
+  }, [dispatch]);
+   
+  return <div>{greeting.length > 0 && <h1>{greeting[0].message || 'hello world'}</h1>}</div>;
 };
 export default Greetings;

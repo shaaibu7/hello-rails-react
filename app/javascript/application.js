@@ -5,7 +5,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import Greetings from "./components/Greetings";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { store } from "./redux/store";
+import store from "./redux/store";
 import { Provider } from "react-redux";
 
 function App() {
